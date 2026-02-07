@@ -4,12 +4,23 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { courses } from "@/data/studentData";
-import { BookOpen, User, ArrowLeft, FileText, Layers } from "lucide-react";
+import { useCourses } from "@/hooks/useApi";
+import { BookOpen, User, ArrowLeft, FileText, Layers, Loader2 } from "lucide-react";
 
 export default function Courses() {
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
-  const course = courses.find((c) => c.id === selectedCourse);
+  const { data: courses, isLoading } = useCourses();
+  const course = courses?.find((c: any) => c.id === selectedCourse);
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex h-[50vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   if (course) {
     return (
@@ -96,34 +107,40 @@ export default function Courses() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {courses.map((c) => (
-            <Card
-              key={c.id}
-              className="cursor-pointer transition-colors hover:border-primary/50"
-              onClick={() => setSelectedCourse(c.id)}
-            >
-              <CardContent className="p-5">
-                <div className="flex items-start justify-between">
-                  <Badge style={{ backgroundColor: c.color, color: "#fff" }}>
-                    {c.code}
-                  </Badge>
-                  <span className="font-display text-lg font-bold">{c.grade}</span>
-                </div>
-                <h3 className="mt-3 font-display text-base font-semibold leading-tight">
-                  {c.name}
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {c.instructor}
-                </p>
-                <div className="mt-4 flex items-center gap-3">
-                  <Progress value={c.progress} className="flex-1 h-2" />
-                  <span className="text-sm font-medium text-muted-foreground">
-                    {c.progress}%
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {courses && courses.length > 0 ? (
+            courses.map((c: any) => (
+              <Card
+                key={c.id}
+                className="cursor-pointer transition-colors hover:border-primary/50"
+                onClick={() => setSelectedCourse(c.id)}
+              >
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between">
+                    <Badge style={{ backgroundColor: c.color, color: "#fff" }}>
+                      {c.code}
+                    </Badge>
+                    <span className="font-display text-lg font-bold">{c.grade}</span>
+                  </div>
+                  <h3 className="mt-3 font-display text-base font-semibold leading-tight">
+                    {c.name}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {c.instructor}
+                  </p>
+                  <div className="mt-4 flex items-center gap-3">
+                    <Progress value={c.progress} className="flex-1 h-2" />
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {c.progress}%
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <p className="col-span-full py-8 text-center text-muted-foreground">
+              No courses available
+            </p>
+          )}
         </div>
       </div>
     </DashboardLayout>

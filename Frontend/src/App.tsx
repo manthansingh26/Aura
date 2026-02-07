@@ -9,6 +9,7 @@ import Schedule from "./pages/Schedule";
 import Assignments from "./pages/Assignments";
 import Grades from "./pages/Grades";
 import Settings from "./pages/Settings";
+import ApiTest from "./pages/ApiTest";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/assignments" element={<Assignments />} />
           <Route path="/grades" element={<Grades />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/api-test" element={<ApiTest />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
