@@ -1,0 +1,1 @@
+// cd "c:\Users\MAnthan\Desktop\Aura\Frontend" ; cmd /c "npm install"
